@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+     <title>Contoh Peta Leaflet</title>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.css" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600&family=Montserrat:wght@300;400;500;600&family=Poppins:wght@100;200;300;400;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+     <style>
+        #mapid { height: 600px;}
+
+        html, body {
+			height: 100%;
+			margin: 0;
+		}
+		.leaflet-container {
+			height: 60cm;
+			width: 60cm;
+			max-width: 100%;
+			max-height: 100%;
+		}
+        header{
+            align-items: center;
+        }
+        body{
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            text-decoration: none;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .logo a{
+            color: #E2C799;
+            font-size: 20px;
+            line-height: 23px;
+            letter-spacing: 2px;
+            align-items: center;
+            font-weight: lighter;
+            text-shadow: 1px 1px 3px rgba(226, 199, 153, 1);
+            text-decoration: none;
+            margin-left: 0px;
+            display: flex;
+        }
+
+        .logo a span{
+            color: #E2C799;
+            font-size: 26px;
+            letter-spacing: 9px;
+            font-weight: lighter;
+            text-shadow: 1px 1px 3px rgba(226, 199, 153, 1);
+        }
+
+        nav{
+            padding: 8px;
+            justify-content: space-around;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            max-height: 100vh;
+        }
+
+        nav ul{
+            display: flex;
+            width: 45%;
+            justify-content: space-between;
+        }
+
+        nav li{
+            font-size: 10px;
+            list-style-type: none;
+        }
+
+        nav a{
+            font-size: 18px;
+            font-weight: 400;
+            text-decoration: none;
+            color: #9A3B3B;
+        }
+
+        nav a:hover{
+            font-weight: bold;
+        }
+
+        .toggle-menu{
+            font-size: 40px;
+            display: none;
+            color: #E2C799;
+            cursor: pointer;
+        }
+
+     </style>
+    </head>
+
+<body>
+    <header>
+        <nav>
+          <div class="logo">
+            <a href="#"><p>SISTEM INFORMASI<span></br>GEOGRAFIS</span></p></a>
+          </div>
+          <div id="toggle-menu" class="toggle-menu">
+            <i class="ph ph-list"></i>
+          </div>
+          <ul id="list-menu" class="hidden">
+            <li><a href="/mapmarker">Map And Marker</a></li>
+            <li><a href="/moremarkers">More Marker</a></li>
+            <li><a href="/markercluster">Marker Cluster</a></li>
+            <li><a href="/polyline">Polyline</a></li>
+            <li><a href="/routing">Routing</a></li>
+          </ul>
+        </nav>
+    </header>
+
+    <div id="mapid"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.js"></script>
+    <script>
+
+//cities
+
+        // Menampilkan peta
+        var mymap = L.map('mapid').setView([-8.4095188,115.188919], 11);
+
+        // Menambahkan layer peta
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(mymap);
+
+        // Membuat icon dari gambar PNG
+        var myIcon = L.icon({
+            iconUrl: 'icon.png',
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+        });
+
+        // Menambahkan marker
+        var marker = L.marker([-8.794811408933244,115.17390623870709],{
+            icon: myIcon,
+            draggable: true
+        }).addTo(mymap);
+
+        // Pop up object 
+var popup = L.popup();
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("Titik Koordinat " + e.latlng.toString())
+        .openOn(map);
+}
+
+
+        // Membuat popup baru
+        var popup = L.popup({ offset: [0, -30]})
+            .setLatLng(marker.getLatLng())
+            .setContent('Ini adalah marker di Bali!');
+        
+        // Binding popup ke marker
+        marker.bindPopup(popup);
+
+        // Format popup content
+        formatContent = function(lat, lng){
+            return `
+                <div class="wrapper">
+                    <div class="row">
+                        <div class="cell merged" style="text-align:center">Koordinat</div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Latitude</div>
+                        <div class="col">${lat}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Longitude</div>
+                        <div class="col">${lng}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Menambahkan event listener pada marker
+        marker.on('click', function() {
+            popup.setLatLng(marker.getLatLng()),
+            popup.setContent(formatContent(marker.getLatLng().lat,marker.getLatLng().lng));
+        });
+
+        // Menambahkan event listener pada marker
+        marker.on('drag', function(event) {
+            popup.setLatLng(marker.getLatLng()),
+            popup.setContent(formatContent(marker.getLatLng().lat,marker.getLatLng().lng));
+            marker.openPopup();
+        });
+    </script>
+</body>
+</html>
+
+<div><hr size=1></div><div><?php show_source(__FILE__);?></div>
