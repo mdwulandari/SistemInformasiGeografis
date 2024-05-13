@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use JWTAuth;
 use App\Models\User;
+use App\Models\Hospital;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
@@ -114,4 +115,141 @@ class ApiController extends Controller
             //'expired' => JWTAuth::getPayload($request->token)->toArray()['exp'] - time() . ' second(s)',
         ], 200);
     }
+
+    public function add_hospitals(Request $request)
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'lat_lng_rs' => 'required|string',
+            'nama_rs' => 'required|string',
+            'alamat_rs' => 'required|string',
+            'id_type_rs' => 'required|exists:tb_type_rs,id_type_rs',
+        ]);
+
+        // Jika validasi gagal, kembalikan respons error
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        // Buat rumah sakit baru
+        $hospital = new Hospital();
+        $hospital->lat_lng_rs = $request->lat_lng_rs;
+        $hospital->nama_rs = $request->nama_rs;
+        $hospital->alamat_rs = $request->alamat_rs;
+        $hospital->id_type_rs = $request->id_type_rs;
+        $hospital->save();
+
+        // Berikan respons sukses
+        return response()->json([
+            'success' => true,
+            'message' => 'Hospital added successfully',
+            'data' => $hospital,
+        ], 201);
+    }
+
+    public function get_hospitals()
+    {
+        // Ambil semua data rumah sakit
+        $hospitals = Hospital::all();
+    
+        // Jika tidak ada rumah sakit yang ditemukan, kembalikan respons kosong
+        if ($hospitals->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No hospitals found',
+            ], 404);
+        }
+    
+        // Jika ada rumah sakit yang ditemukan, kembalikan respons sukses beserta data rumah sakit
+        return response()->json([
+            'success' => true,
+            'message' => 'Hospitals retrieved successfully',
+            'data' => $hospitals,
+        ], 200);
+    }
+
+    public function get_hospitals_id($id_rs)
+    {
+        // Temukan rumah sakit berdasarkan ID
+        $hospital = Hospital::find($id_rs);
+    
+        // Jika rumah sakit tidak ditemukan, kembalikan respons error
+        if (!$hospital) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hospital not found',
+            ], 404);
+        }
+    
+        // Jika rumah sakit ditemukan, kembalikan respons sukses beserta data rumah sakit
+        return response()->json([
+            'success' => true,
+            'message' => 'Hospital details retrieved successfully',
+            'data' => $hospital,
+        ], 200);
+    }
+    
+    public function edit_hospitals(Request $request, $id_rs)
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'lat_lng_rs' => 'required|string',
+            'nama_rs' => 'required|string',
+            'alamat_rs' => 'required|string',
+            'id_type_rs' => 'required|exists:tb_type_rs,id_type_rs',
+        ]);
+    
+        // Jika validasi gagal, kembalikan respons error
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+    
+        // Temukan rumah sakit berdasarkan ID
+        $hospital = Hospital::findOrFail($id_rs);
+    
+        // Update data rumah sakit
+        $hospital->lat_lng_rs = $request->lat_lng_rs;
+        $hospital->nama_rs = $request->nama_rs;
+        $hospital->alamat_rs = $request->alamat_rs;
+        $hospital->id_type_rs = $request->id_type_rs;
+        $hospital->save();
+    
+        // Berikan respons sukses
+        return response()->json([
+            'success' => true,
+            'message' => 'Hospital updated successfully',
+            'data' => $hospital,
+        ], 200);
+    }
+
+    public function delete_hospitals($id_rs)
+    {
+        // Temukan rumah sakit berdasarkan ID
+        $hospital = Hospital::find($id_rs);
+    
+        // Jika rumah sakit tidak ditemukan, kembalikan respons error
+        if (!$hospital) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hospital not found',
+            ], 404);
+        }
+    
+        // Jika rumah sakit ditemukan, hapus rumah sakit
+        $hospital->delete();
+    
+        // Berikan respons sukses
+        return response()->json([
+            'success' => true,
+            'message' => 'Hospital deleted successfully',
+        ], 200);
+    }  
 }
