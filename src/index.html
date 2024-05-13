@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="loginAuth.js" defer></script>
+    <title>Register</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .heading {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .heading h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .heading p {
+            margin-top: 10px;
+            color: #666;
+        }
+
+        form {
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="email"],
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        button[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">
+            <h1>Sistem Informasi Geografis</h1>
+        </div>
+
+        <form id="registerForm">
+            <label for="email">Email:</label>
+            <input type="email" id="email_register" name="email" placeholder="Enter your email">
+
+            <label for="password">Password:</label>
+            <input type="password" id="password_register" name="password" placeholder="Enter password">
+
+            <label for="name">Name:</label>
+            <input type="text" id="name_register" name="name" placeholder="Enter your name">
+
+            <div class="flex items-center">
+                <button type="button" onclick="register()">Register</button>
+            </div>
+        </form>
+
+        <div class="login-link">
+            <a href="login.html">Login</a>
+        </div>
+    </div>
+</body>
+</html>
