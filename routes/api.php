@@ -28,9 +28,4 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     /**
       * Silahkan tambahkan route anda disini ...
     */
-    Route::post('hospitals', [ApiController::class, 'add_hospitals']);
-    Route::get('gethospitals', [ApiController::class, 'get_hospitals']);
-    Route::get('hospitals/{id_rs}', [ApiController::class, 'get_hospitals_id']);
-    Route::put('hospitals/{id_rs}', [ApiController::class, 'edit_hospitals']);
-    Route::delete('hospitals/{id_rs}', [ApiController::class, 'delete_hospitals']);
 });
