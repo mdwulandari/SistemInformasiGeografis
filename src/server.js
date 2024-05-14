@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 app.use(cors());
-const PORT = 5035;
+const PORT = 4000;
 
 app.use(express.static(__dirname));
 

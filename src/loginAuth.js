@@ -3,7 +3,7 @@ async function register() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
   
-    const apiUrl = 'http://gis_2105551075.local.net/api/register';
+    const apiUrl = 'http://api_2105551075.local.net/api/register';
   
     try {
       const response = await fetch(apiUrl, {
@@ -39,7 +39,7 @@ async function login() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
-  const apiUrl = 'http://gis_2105551075.local.net/api/login';
+  const apiUrl = 'http://api_2105551075.local.net/api/login';
 
   try {
       const response = await fetch(apiUrl, {

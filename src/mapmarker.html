@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Contoh Peta Leaflet</title>
+    <title>Peta Leaflet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -109,25 +109,19 @@
             cursor: pointer;
         }
 
-        .article {
-            margin: 0;
-            padding: 0;
-            top: 100%;
+        .toggle-menu {
+            font-size: 40px;
+            color: #E2C799;
+            cursor: pointer;
         }
 
-        .toggle-menu {
-    font-size: 40px;
-    color: #E2C799;
-    cursor: pointer;
-}
+        .toggle-menu i {
+            display: block;
+        }
 
-.toggle-menu i {
-    display: block;
-}
-
-.toggle-menu.active i {
-    display: none;
-}
+        .toggle-menu.active i {
+            display: none;
+        }
     </style>
 </head>
 
@@ -143,17 +137,15 @@
             </div>
             
             <ul id="list-menu" class="hidden">
-                <li><a href="#mapmarker">Map And Marker</a></li>
-                <li><a href="#moremarkers">More Marker</a></li>
-                <li><a href="#markercluster">Marker Cluster</a></li>
-                <li><a href="#polyline">Polyline</a></li>
-                <li><a href="#routing">Routing</a></li>
+                <li><a href="mapmarker.html">Map And Marker</a></li>
+                <li><a href="moremarker.html">More Marker</a></li>
+                <li><a href="markercluster.html">Marker Cluster</a></li>
+                <li><a href="polyline.html">Polyline</a></li>
+                <li><a href="routing.html">Routing</a></li>
             </ul>
         </nav>
-        
     </header>
     <main>
-        <article class="mapmarkers" id="mapmarker"></article>
         <div id="mapid"></div>
         <script>
             // Menampilkan peta
@@ -173,7 +165,7 @@
             });
 
             // Menambahkan marker
-            var marker = L.marker([-8.794811408933244, 115.17390623870709], {
+            var marker = L.marker([-8.794811408933244,115.17390623870709], {
                 icon: myIcon,
                 draggable: true
             }).addTo(mymap);
@@ -218,7 +210,6 @@
                 marker.openPopup();
             });
         </script>
-    </article>
-</main>
+    </main>
 </body>
 </html>
