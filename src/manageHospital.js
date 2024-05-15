@@ -35,6 +35,8 @@ async function addHospital() {
             } else {
                 alert(data.message);
             }
+
+            window.location.href = 'hospital.html';
         } else {
             throw new Error('Network response was not ok');
         }
@@ -143,6 +145,8 @@ async function editHospital() {
             if (data.success) {
                 alert('Hospital updated successfully!');
                 // Redirect or refresh as needed
+
+                window.location.href = 'hospital.html';
             } else {
                 alert(data.message);
             }
@@ -177,8 +181,10 @@ async function deleteHospital(id_rs) {
 
         if (response.ok) {
             if (data.success) {
-                alert('Hospital deleted successfully! Refresh the page!');
+                alert('Hospital deleted successfully!');
                 // Redirect or refresh as needed
+
+                window.location.href = 'hospital.html';
             } else {
                 alert(data.message);
             }
