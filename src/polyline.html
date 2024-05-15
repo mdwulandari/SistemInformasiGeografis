@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Peta Leaflet</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600&family=Montserrat:wght@300;400;500;600&family=Poppins:wght@100;200;300;400;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        #mapid { height: 600px;}
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            display: flex;
+        }
+
+        header {
+            align-items: center;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            text-decoration: none;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .logo a {
+            color: #E2C799;
+            font-size: 20px;
+            line-height: 23px;
+            letter-spacing: 2px;
+            align-items: center;
+            font-weight: lighter;
+            text-shadow: 1px 1px 3px rgba(226, 199, 153, 1);
+            text-decoration: none;
+            margin-left: 0px;
+            display: flex;
+        }
+
+        .logo a span {
+            color: #E2C799;
+            font-size: 26px;
+            letter-spacing: 9px;
+            font-weight: lighter;
+            text-shadow: 1px 1px 3px rgba(226, 199, 153, 1);
+        }
+
+        nav {
+            padding: 8px;
+            justify-content: space-around;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            max-height: 100vh;
+            top: 0;
+            position: fixed;
+            z-index: 2;
+            background-color: #ffffff;
+        }
+
+        nav ul {
+            display: flex;
+            width: 45%;
+            justify-content: space-between;
+        }
+
+        nav li {
+            font-size: 10px;
+            list-style-type: none;
+        }
+
+        nav a {
+            font-size: 18px;
+            font-weight: 400;
+            text-decoration: none;
+            color: #9A3B3B;
+        }
+
+        nav a:hover {
+            font-weight: bold;
+        }
+
+        .leaflet-container {
+            height: 60cm;
+            width: 60cm;
+            max-width: 100%;
+            max-height: 100%;
+            z-index: 1;
+            padding-top: 140px;
+        }
+
+        .toggle-menu {
+            font-size: 40px;
+            color: #E2C799;
+            cursor: pointer;
+            display: block;
+        }
+
+        .toggle-menu i {
+            display: block;
+        }
+
+        .toggle-menu.active i {
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #additional-menu:not(.hidden) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            top: 60px;
+            right: 25px;
+            background-color: #ffffff;
+            padding: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 200px;
+        }
+
+        #additional-menu:not(.hidden) li {
+            font-size: 18px;
+            list-style-type: none;
+            margin-bottom: 8px;
+        }
+
+        #additional-menu:not(.hidden) a {
+            color: #9A3B3B;
+            text-decoration: none;
+        }
+
+        #additional-menu:not(.hidden) a:hover {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#"><p>SISTEM INFORMASI<span></br>GEOGRAFIS</span></p></a>
+            </div>
+            
+            <!-- Menu utama -->
+            <ul id="list-menu">
+                <li><a href="mapmarker.html">Map And Marker</a></li>
+                <li><a href="moremarker.html">More Marker</a></li>
+                <li><a href="markercluster.html">Marker Cluster</a></li>
+                <li><a href="polyline.html">Polyline</a></li>
+                <li><a href="routing.html">Routing</a></li>
+            </ul>
+    
+            <!-- Menu tambahan yang disembunyikan -->
+            <ul id="additional-menu" class="hidden">
+                <li><a href="hospital.html">Kelola Data Rs</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+            <script src="loginAuth.js" defer></script>
+            <!-- Tombol toggle -->
+            <div id="toggle-menu" class="toggle-menu">
+                <i class="ph ph-list"></i>
+            </div>
+        </nav>
+    
+        <script>
+            document.getElementById('toggle-menu').addEventListener('click', function() {
+                var additionalMenu = document.getElementById('additional-menu');
+                additionalMenu.classList.toggle('hidden');
+            });
+        </script>
+    </header>
+    <main>
+        <div id="mapid"></div>
+        <button id="btnKirim">Simpan</button>
+    
+        <script>
+            // http://leaflet.github.io/Leaflet.Editable/
+            // https://github.com/makinacorpus/Leaflet.Snap/
+            // https://github.com/jieter/Leaflet.encoded
+    
+            // Menampilkan peta
+            var mymap = L.map('mapid',{editable: true}).setView([-8.5330242817551,115.21276982331896], 12);
+    
+            // Menambahkan layer peta
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+                maxZoom: 18,
+            }).addTo(mymap);
+    
+            // Polyline
+            var polyline = L.polyline([], {color: 'red'}).addTo(mymap);
+            
+            // Disable remove node on left mouse click
+            polyline.on('editable:vertex:click', function(event) {
+                //event.cancel();
+            });
+    
+            // Remove node on right mouse click
+            polyline.on('editable:vertex:contextmenu', function(event) {            
+                var latlngs = event.layer.getLatLngs();
+                var index = latlngs.findIndex(function(latlng) {
+                    return latlng.lat === event.latlng.lat && latlng.lng === event.latlng.lng;
+                });
+                latlngs.splice(index, 1);
+                event.layer.setLatLngs(latlngs);
+                polyline.editor.reset();
+                console.log(polylineToJson(polyline.getLatLngs())); // Output string JSON
+                console.log(polyline.encodePath());      
+            });
+    
+            polylineToJson = (latLangs)=>{
+                var jsonArray = latLangs.map(function(latlng) {
+                    return [latlng.lat,latlng.lng];
+                });
+                //
+                var jsonString = JSON.stringify(jsonArray);
+                return jsonString;
+            }
+    
+            // Tambahkan event listener click pada peta
+            mymap.on('click', function(e) {
+                // Polyline
+                polyline.addLatLng(e.latlng);
+                polyline.editor.reset();
+                //
+                console.log(polylineToJson(polyline.getLatLngs())); // Output string JSON
+                console.log(polyline.encodePath()); 
+            });
+    
+            var btnKirim = document.getElementById('btnKirim');
+            btnKirim.addEventListener('click',function(){
+                // Ambil koordinat masing-masing marker dan simpan ke dalam array koordinat
+                var koordinat = polylineToJson(polyline.getLatLngs());
+    
+                // Kirim data ke server dalam format JSON menggunakan method fetch()
+                fetch("simpan.php", {
+                    method: "POST",
+                    body: koordinat,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    console.log(data);
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+            });
+    
+            // Ambil data dari server dalam format JSON menggunakan method fetch()
+            fetch("baca.php").then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    //polyline.enableEdit();
+                    data.forEach(function(c,i){
+                        let latlng = L.latLng(c[0], c[1]);                    
+                        polyline.addLatLng(latlng);
+                    })
+                    polyline.enableEdit();
+                    polyline.editor.reset();  
+                    console.log(polyline.encodePath());              
+                })
+                
+                .catch(function(error) {
+                    console.log(error);
+                });
+        </script>
+    </main>
+</body>
+</html>

@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Peta Leaflet</title>
+    <title>Hospitals</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600&family=Montserrat:wght@300;400;500;600&family=Poppins:wght@100;200;300;400;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        #mapid { height: 600px;}
-
         html, body {
             height: 100%;
             margin: 0;
@@ -93,15 +89,6 @@
             font-weight: bold;
         }
 
-        .leaflet-container {
-            height: 60cm;
-            width: 60cm;
-            max-width: 100%;
-            max-height: 100%;
-            z-index: 1;
-            padding-top: 140px;
-        }
-
         .toggle-menu {
             font-size: 40px;
             color: #E2C799;
@@ -149,6 +136,43 @@
         #additional-menu:not(.hidden) a:hover {
             font-weight: bold;
         }
+        
+        .container {
+            width: 130%;
+            margin: 150px 0 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 80px;  /* */
+        }
+
+        #hospitalTable {
+            width: 90%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #hospitalTable th, #hospitalTable td {
+            border: 1px solid #ddd;
+            padding: 20px;
+            text-align: left;
+            width: 80px;  /* left right */
+        }
+        
+        #hospitalTable th {
+            background-color: #c01010;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #hospitalTable tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+            
+        }
+        #hospitalTable tbody tr:hover {
+            background-color: #ddd;
+            
+        }
     </style>
 </head>
 
@@ -186,71 +210,70 @@
         </script>
     </header>
     
-    <main>
-        <div id="mapid"></div>
-        <script>
-            // Menampilkan peta
-            var mymap = L.map('mapid').setView([-8.4095188, 115.188919], 11);
+<main>
+    <div class="container">
+        <!-- <div class="heading">
+            <h1>List of Hospitals</h1>
+        </div> -->
+        <table id="hospitalTable">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Lat.Lng</th>
+                    <th>Hospital Name</th>
+                    <th>Address</th>
+                    <th>Id Type RS</th>
+                    <th>Action</th> <!-- Tambah kolom Action -->
+                    <!-- Tambahkan kolom tambahan sesuai kebutuhan -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data rumah sakit akan dimasukkan di sini menggunakan JavaScript -->
+            </tbody>
+        </table>
+        
+    </div>
+    <script src="manageHospital.js" defer></script>
+    <script>
+        // Variabel global untuk menyimpan data rumah sakit
+        let hospitalData = [];
 
-            // Menambahkan layer peta
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-                maxZoom: 18,
-            }).addTo(mymap);
+        async function populateTable(hospitals) {
+            const tableBody = document.querySelector('#hospitalTable tbody');
 
-            // Membuat icon dari gambar PNG
-            var myIcon = L.icon({
-                iconUrl: 'icon.png',
-                iconSize: [40, 40],
-                iconAnchor: [20, 40],
-            });
+            hospitals.forEach((hospital, index) => {
+                // Menambahkan data rumah sakit ke dalam array
+                hospitalData.push(hospital);
 
-            // Menambahkan marker
-            var marker = L.marker([-8.794811408933244,115.17390623870709], {
-                icon: myIcon,
-                draggable: true
-            }).addTo(mymap);
-
-            // Membuat popup baru
-            var popup = L.popup({ offset: [0, -30] })
-                .setLatLng(marker.getLatLng())
-                .setContent('Ini adalah marker di Bali!');
-
-            // Binding popup ke marker
-            marker.bindPopup(popup);
-
-            // Format popup content
-            formatContent = function(lat, lng) {
-                return `
-                    <div class="wrapper">
-                        <div class="row">
-                            <div class="cell merged" style="text-align:center">Koordinat</div>
-                        </div>
-                        <div class="row">
-                            <div class="col">Latitude</div>
-                            <div class="col">${lat}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col">Longitude</div>
-                            <div class="col">${lng}</div>
-                        </div>
-                    </div>
+                // Memasukkan data rumah sakit ke dalam tabel
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${hospital.lat_lng_rs}</td>
+                    <td>${hospital.nama_rs}</td>
+                    <td>${hospital.alamat_rs}</td>
+                    <td>${hospital.id_type_rs}</td>
+                    <td>
+                        <button onclick="window.location.href = 'updatehospital.html?id=${hospital.id_rs}'">Edit</button>
+                        <button onclick="deleteHospital(${hospital.id_rs})">Delete</button> <!-- Tombol Delete -->
+                    </td>
                 `;
+                tableBody.appendChild(row);
+            });
+            
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const hospitals = await getHospitals();
+                console.log(hospitals); // Tambahkan ini untuk memeriksa data hospitals
+                populateTable(hospitals.data);
+            } catch (error) {
+                console.error(error);
+                // Tangani kesalahan secara sesuai
             }
-
-            // Menambahkan event listener pada marker
-            marker.on('click', function() {
-                popup.setLatLng(marker.getLatLng()),
-                    popup.setContent(formatContent(marker.getLatLng().lat, marker.getLatLng().lng));
-            });
-
-            // Menambahkan event listener pada marker
-            marker.on('drag', function(event) {
-                popup.setLatLng(marker.getLatLng()),
-                    popup.setContent(formatContent(marker.getLatLng().lat, marker.getLatLng().lng));
-                marker.openPopup();
-            });
-        </script>
-    </main>
+        });
+    </script>
+</main>
 </body>
 </html>
