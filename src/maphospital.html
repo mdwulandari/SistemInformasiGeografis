@@ -149,6 +149,53 @@
         #additional-menu:not(.hidden) a:hover {
             font-weight: bold;
         }
+/* Animasi saat zooming */
+.marker-cluster-custom {
+    transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s;
+    border-radius: 50%;
+    background-color: rgba(76, 175, 80, 0.5); /* Gunakan nilai rgba() untuk transparansi */
+    /* border: 2px solid #fff; */
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Bayangan yang lebih menonjol */
+    position: relative; /* Untuk memposisikan angka */
+    padding: 2px; /* Atur padding agar lingkaran lebih besar */
+    backdrop-filter: blur(10px) saturate(100%) contrast(85%) brightness(130%); /* Efek glassmorphism */
+}
+
+/* Animasi saat hovering */
+.marker-cluster-custom:hover {
+    background-color: rgba(51, 136, 255, 0.5); /* Warna dengan transparansi */
+    border-color: #3388ff;
+    cursor: pointer;
+}
+
+
+/* Animasi saat clustering */
+.marker-cluster-custom .cluster-animations {
+    animation: pulsate 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulsate {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+/* CSS untuk angka di dalam cluster */
+.marker-cluster-custom span {
+    position: absolute; /* Posisi absolut */
+    top: 50%; /* Posisi vertikal ke tengah */
+    left: 50%; /* Posisi horizontal ke tengah */
+    transform: translate(-50%, -50%); /* Geser ke tengah */
+    font-size: 14px; /* Ukuran font */
+}
+
+
     </style>
 </head>
 
@@ -193,67 +240,75 @@
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <script>
         // Menampilkan peta
-        var mymap = L.map('mapid').setView([-8.4095188,115.188919], 11);
+var mymap = L.map('mapid').setView([-8.4095188,115.188919], 11);
 
-        // Menambahkan layer peta
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-        }).addTo(mymap);
+// Menambahkan layer peta
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+    maxZoom: 18,
+}).addTo(mymap);
 
-        // Array markers
-        var markers = [];
-
-        // Marker cluster
-        var markerClusters = L.markerClusterGroup().addTo(mymap);        
-
-        // Is On Drag
-        var isOnDrag = false;
-
-        // Membuat icon dari gambar PNG
-        var myIcon = L.icon({
-            iconUrl: 'icon.png',
-            iconSize: [40, 40],
-            iconAnchor: [20, 40],
+// Marker cluster
+var markerClusters = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: true,
+    disableClusteringAtZoom: 17,
+    iconCreateFunction: function(cluster) {
+        return L.divIcon({
+            html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+            className: 'marker-cluster-custom', // Tambahkan kelas CSS di sini
+            iconSize: [40, 40]
         });
+    }
+}).addTo(mymap);        
 
-        // Format popup content
-        formatContent = function(lat, lng, index){
-            return `
-                <div class="wrapper">
-                    <div class="row">
-                        <div class="cell merged" style="text-align:center">Marker [ ${index+1} ]</div>
-                    </div>
-                    <div class="row">
-                        <div class="col">Latitude</div>
-                        <div class="col2">${lat}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col">Longitude</div>
-                        <div class="col2">${lng}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col">Left click</div>
-                        <div class="col2">New marker / show popup</div>
-                    </div>
-                    <div class="row">
-                        <div class="col">Right click</div>
-                        <div class="col2">Delete marker</div>
-                    </div>
-                </div>
-            `;
-        }
+// Is On Drag
+var isOnDrag = false;
 
-        addMarker = function(latlng, index) {
+// Membuat icon dari gambar PNG
+var myIcon = L.icon({
+    iconUrl: 'icon.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+});
+
+// Format popup content
+formatContent = function(lat, lng, index){
+    return `
+        <div class="wrapper">
+            <div class="row">
+                <div class="cell merged" style="text-align:center">Marker [ ${index+1} ]</div>
+            </div>
+            <div class="row">
+                <div class="col">Latitude</div>
+                <div class="col2">${lat}</div>
+            </div>
+            <div class="row">
+                <div class="col">Longitude</div>
+                <div class="col2">${lng}</div>
+            </div>
+            <div class="row">
+                <div class="col">Left click</div>
+                <div class="col2">New marker / show popup</div>
+            </div>
+            <div class="row">
+                <div class="col">Right click</div>
+                <div class="col2">Delete marker</div>
+            </div>
+        </div>
+    `;
+}
+
+addMarker = function(latlng, index) {
     // Menambahkan marker
     var marker = L.marker(latlng, {
         icon: myIcon,
-        draggable: true
+        draggable: false,
     }).addTo(mymap);
 
     // Membuat popup baru
-    var popup = L.popup({ offset: [0, -30] })
-        .setLatLng(latlng);
+    var popup = L.popup({ offset: [0, -30] }).setLatLng(latlng);
     
     // Binding popup ke marker
     marker.bindPopup(popup);
@@ -265,7 +320,7 @@
     });
 
     marker.on('dragstart', function(event) {
-        isOnDrag = true;
+        isOnDrag = false;
     });
 
     // Menambahkan event listener pada marker
@@ -282,30 +337,13 @@
     });
 
     marker.on('contextmenu', function(event) {
-        // Hapus marker dari peta dan array markers
-        mymap.removeLayer(marker);
-        markers.splice(index, 1);
+        // Hapus marker dari peta dan markerClusters
+        markerClusters.removeLayer(marker);
     });
 
     // Return marker
     return marker;
 };
-
-
-        // Tambahkan event listener click pada peta
-        mymap.on('click', function(e) {
-            console.log(isOnDrag);
-            if(!isOnDrag){
-                // Buat marker baru
-                var newMarker = addMarker(e.latlng,markers.length);
-                
-                // Tambahkan marker ke array markers
-                markers.push(newMarker);
-
-                // Tambahkan ke markercluster
-                markerClusters.addLayer(L.layerGroup(markers));
-            }
-        });
 
         async function populateMapWithMarkers(hospitals) {
     hospitals.forEach((hospital, index) => {
@@ -321,14 +359,16 @@
         
         // Pastikan lat dan lng adalah angka yang valid
         if (!isNaN(lat) && !isNaN(lng)) {
-            // Menambahkan marker untuk setiap rumah sakit
-            addMarker(L.latLng(lat, lng), index);
+            // Membuat marker untuk setiap rumah sakit
+            var marker = addMarker(L.latLng(lat, lng), index);
+
+            // Tambahkan marker ke markerCluster
+            markerClusters.addLayer(marker);
         } else {
             console.error('Invalid latitude or longitude:', latLngString);
         }
     });
 }
-
     </script>
     <script src="manageHospital.js" defer></script>
     <script>
