@@ -63,7 +63,7 @@ async function login() {
               console.log(data.data.token);
 
               // Redirect to system dashboard after successful login
-              window.location.href = 'mapmarker.html';
+              window.location.href = 'hospital.html';
           } else {
               alert(data.message);
           }
