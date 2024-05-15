@@ -177,7 +177,7 @@ async function deleteHospital(id_rs) {
 
         if (response.ok) {
             if (data.success) {
-                alert('Hospital deleted successfully!');
+                alert('Hospital deleted successfully! Refresh the page!');
                 // Redirect or refresh as needed
             } else {
                 alert(data.message);
