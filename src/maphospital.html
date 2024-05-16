@@ -273,7 +273,8 @@
         formatContent = function(lat, lng, nama_rs, alamat_rs, id_type_rs, index) {
     const content = `
         <div>
-            <div class="cell merged" style="text-align:center">Marker [ ${index + 1} ]</div>
+            <div class="cell merged" style="text-align:center">${nama_rs}</div>
+            <div class="cell merged" style="text-align:center">Marker [${index + 1}]</div>
 
             <p><strong>Latitude:</strong> ${lat}</p>
             <p><strong>Longitude:</strong> ${lng}</p>
@@ -283,6 +284,7 @@
     `;
     return content;
 }
+
 
 
 addMarker = function(latlng, index, nama_rs, alamat_rs, id_type_rs) {
