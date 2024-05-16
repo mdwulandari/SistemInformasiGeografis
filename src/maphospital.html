@@ -270,34 +270,22 @@
             iconAnchor: [20, 40],
         });
 
-        // Format popup content
-            formatContent = function(lat, lng, index){
-            return `
-                <div class="wrapper">
-                    <div class="row">
-                    <div class="cell merged" style="text-align:center">Marker [ ${index+1} ]</div>
-                    </div>
-                    <div class="row">
-                    <div class="col">Latitude</div>
-                    <div class="col2">${lat}</div>
-                    </div>
-                    <div class="row">
-                    <div class="col">Longitude</div>
-                    <div class="col2">${lng}</div>
-                    </div>
-                    <div class="row">
-                    <div class="col">Left click</div>
-                    <div class="col2">New marker / show popup</div>
-                </div>
-            <div class="row">
-                <div class="col">Right click</div>
-                <div class="col2">Delete marker</div>
-            </div>
+        formatContent = function(lat, lng, nama_rs, alamat_rs, id_type_rs, index) {
+    const content = `
+        <div>
+            <div class="cell merged" style="text-align:center">Marker [ ${index + 1} ]</div>
+
+            <p><strong>Latitude:</strong> ${lat}</p>
+            <p><strong>Longitude:</strong> ${lng}</p>
+            <p><strong>Alamat:</strong> ${alamat_rs}</p>
+            <p><strong>Tipe RS:</strong> ${id_type_rs}</p>
         </div>
     `;
+    return content;
 }
 
-addMarker = function(latlng, index) {
+
+addMarker = function(latlng, index, nama_rs, alamat_rs, id_type_rs) {
     // Menambahkan marker
     var marker = L.marker(latlng, {
         icon: myIcon,
@@ -306,25 +294,18 @@ addMarker = function(latlng, index) {
 
     // Membuat popup baru
     var popup = L.popup({ offset: [0, -30] }).setLatLng(latlng);
-    
+
     // Binding popup ke marker
     marker.bindPopup(popup);
 
     // Menambahkan event listener pada marker
     marker.on('click', function() {
         popup.setLatLng(marker.getLatLng());
-        popup.setContent(formatContent(marker.getLatLng().lat, marker.getLatLng().lng, index));
+        popup.setContent(formatContent(marker.getLatLng().lat, marker.getLatLng().lng, nama_rs, alamat_rs, id_type_rs, index));
     });
 
     marker.on('dragstart', function(event) {
         isOnDrag = false;
-    });
-
-    // Menambahkan event listener pada marker
-    marker.on('drag', function(event) {
-        popup.setLatLng(marker.getLatLng());
-        popup.setContent(formatContent(marker.getLatLng().lat, marker.getLatLng().lng, index));
-        marker.openPopup();
     });
 
     marker.on('dragend', function(event) {
@@ -342,22 +323,25 @@ addMarker = function(latlng, index) {
     return marker;
 };
 
-        async function populateMapWithMarkers(hospitals) {
+async function populateMapWithMarkers(hospitals) {
     hospitals.forEach((hospital, index) => {
         // Mengambil lat_lng_rs dari rumah sakit
         const latLngString = hospital.lat_lng_rs;
-        
+        const nama_rs = hospital.nama_rs;
+        const alamat_rs = hospital.alamat_rs;
+        const id_type_rs = hospital.id_type_rs;
+
         // Pisahkan latitude dan longitude
         const latLngArray = latLngString.split(',');
-        
+
         // Konversi string menjadi angka
         const lat = parseFloat(latLngArray[0]);
         const lng = parseFloat(latLngArray[1]);
-        
+
         // Pastikan lat dan lng adalah angka yang valid
         if (!isNaN(lat) && !isNaN(lng)) {
             // Membuat marker untuk setiap rumah sakit
-            var marker = addMarker(L.latLng(lat, lng), index);
+            var marker = addMarker(L.latLng(lat, lng), index, nama_rs, alamat_rs, id_type_rs);
 
             // Tambahkan marker ke markerCluster
             markerClusters.addLayer(marker);
@@ -366,9 +350,10 @@ addMarker = function(latlng, index) {
         }
     });
 }
-    </script>
-    <script src="manageHospital.js" defer></script>
-    <script>
+
+        </script>
+        <script src="manageHospital.js" defer></script>
+        <script>
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const hospitals = await getHospitals();
