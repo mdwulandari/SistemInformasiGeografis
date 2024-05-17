@@ -207,12 +207,13 @@ button {
     
             <!-- Menu tambahan yang disembunyikan -->
             <ul id="additional-menu" class="hidden">
+                <li id="user-info" class="hidden">Welcome, <span id="user-name"></span></li>
                 <li><a href="mapmarker.html">Marker Gis</a></li>
                 <li><a href="#" onclick="logout()">Logout</a></li>
             </ul>
             <script src="loginAuth.js" defer></script>
             <!-- Tombol toggle -->
-            <div id="toggle-menu" class="toggle-menu">
+            <div id="toggle-menu" class="toggle-menu" onclick="getUserInfo()">
                 <i class="ph ph-list"></i>
             </div>
         </nav>

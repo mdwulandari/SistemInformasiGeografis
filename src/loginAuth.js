@@ -76,6 +76,47 @@ async function login() {
   }
 }
 
+async function getUserInfo() {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+        console.error("Token not found");
+        return null;
+    }
+
+    const apiUrl = 'http://api_2105551075.local.net/api/getuser';
+    
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('User data:', data);
+            const user = data.data.user;
+            const userNameElement = document.getElementById('user-name');
+            const userInfoElement = document.getElementById('user-info');
+            if (userNameElement && userInfoElement) {
+                userNameElement.textContent = user.name; // Assuming the user's name is stored in the 'name' field
+                userInfoElement.classList.remove('hidden');
+            }
+            return user;
+        } else {
+            throw new Error(data.message || 'Failed to fetch user information');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+
 async function logout() {
     const apiUrl = 'http://api_2105551075.local.net/api/logout';
     const token = localStorage.getItem("token");
