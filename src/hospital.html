@@ -138,41 +138,56 @@
         }
         
         .container {
-            width: 20%;
+            margin: 50px auto;
+            max-width: 800px;
             margin: 150px 0 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 600px;  /* */
         }
-
-        #hospitalTable {
-            /* width: 5%; */
+        table {
+            width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 14px;
         }
-        #hospitalTable th, #hospitalTable td {
+        th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 6px;
             text-align: left;
-            width: 100px;  /* left right */
         }
-        
-        #hospitalTable th {
+        th {
             background-color: #c01010;
             color: #f2f2f2;
             text-align: center;
-            padding: 5px;
+            font-weight: bold;
+            padding: 8px;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tbody tr:hover {
+            background-color: #ddd;
         }
 
-        #hospitalTable tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-            
-        }
-        #hospitalTable tbody tr:hover {
-            background-color: #ddd;
-            
-        }
+button {
+    padding: 4px 8px; /* Adjust padding to make the button smaller */
+    font-size: 12px; /* Adjust font size */
+    border: none;
+    border-radius: 3px; /* Rounded corners */
+    background-color: #c01010; /* Button color */
+    color: #fff; /* Text color */
+    cursor: pointer; /* Show pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+button:hover {
+    background-color: #850606; /* Darker color on hover */
+}
+
+/* Center-align buttons */
+button {
+    display: block;
+    margin: 0 auto; /* Center horizontally */
+    margin-top: 10px; /* Add some top margin for spacing */
+}
     </style>
 </head>
 
@@ -222,7 +237,7 @@
                     <th>Lat.Lng</th>
                     <th>Hospital Name</th>
                     <th>Address</th>
-                    <th>Id Type RS</th>
+                    <th>Type</th>
                     <th>Url Photo</th>
                     <th>Action</th> <!-- Tambah kolom Action -->
                     <!-- Tambahkan kolom tambahan sesuai kebutuhan -->
