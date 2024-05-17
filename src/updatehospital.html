@@ -164,6 +164,7 @@
         input[type="nama_rs"],
         input[type="alamat_rs"],
         input[type="id_type_rs"],
+        input[type="image_url"],
         textarea {
             width: calc(100% - 10px);
             padding: 8px;
@@ -249,19 +250,21 @@
                 <!-- <h1>Update Hospital</h1> -->
             </div>
     
-            <form id="addhospitalForm">
+            <form id="editHospitalForm">
                 <label for="lat_lng_rs">Lat,Lng:</label>
-                <input type="lat_lng_rs" id="lat_lng_rs" name="lat_lng_rs" placeholder="Enter lattitude longtitud">
+                <input type="lat_lng_rs" id="lat_lng_rs" name="lat_lng_rs" placeholder="Enter latitude longitude">
     
                 <label for="nama_rs">Hospital Name:</label>
                 <input type="nama_rs" id="nama_rs" name="nama_rs" placeholder="Enter hospital name">
     
-                <label for="alamat_rs">Adrress:</label>
+                <label for="alamat_rs">Address:</label>
                 <input type="alamat_rs" id="alamat_rs" name="alamat_rs" placeholder="Enter address">
     
                 <label for="id_type_rs">Id Type:</label>
-                <input type="id_type_rs" id="id_type_rs" name="id_type_rs" placeholder="Enter type hospital">
+                <input type="id_type_rs" id="id_type_rs" name="id_type_rs" placeholder="Enter hospital type">
     
+                <label for="image_url">Image URL:</label>
+                <input type="image_url" id="image_url" name="image_url" placeholder="Enter image URL">
     
                 <div class="flex items-center">
                     <button type="button" onclick="editHospital()">Update</button>
@@ -269,7 +272,7 @@
             </form>
         </div>
         <script src="manageHospital.js" defer></script>
-
+    
         <script>
             // Mendapatkan ID rumah sakit dari parameter URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -277,32 +280,34 @@
     
             // Memanggil fungsi untuk mendapatkan data rumah sakit berdasarkan ID
             async function populateForm() {
-    try {
-        const hospitalData = await getHospitalById(hospitalId);
-        console.log(hospitalData); // Tambahkan ini untuk mengecek data
-
-        // Memastikan data rumah sakit ditemukan
-        if (hospitalData && hospitalData.data) {
-            // Mengisi nilai input form dengan data dari database
-            document.getElementById("lat_lng_rs").value = hospitalData.data.lat_lng_rs;
-            document.getElementById("nama_rs").value = hospitalData.data.nama_rs;
-            document.getElementById("alamat_rs").value = hospitalData.data.alamat_rs;
-            document.getElementById("id_type_rs").value = hospitalData.data.id_type_rs;
-        } else {
-            // Menangani kasus jika data rumah sakit tidak ditemukan
-            console.error('Hospital data not found.');
-            alert('Hospital data not found. Please try again later.');
-        }
-    } catch (error) {
-        // Menangani kesalahan saat mengambil data rumah sakit
-        console.error('Error:', error);
-        alert('An error occurred while fetching hospital details. Please try again later.');
-    }
-}
+                try {
+                    const hospitalData = await getHospitalById(hospitalId);
+                    console.log(hospitalData); // Tambahkan ini untuk mengecek data
+    
+                    // Memastikan data rumah sakit ditemukan
+                    if (hospitalData && hospitalData.data) {
+                        // Mengisi nilai input form dengan data dari database
+                        document.getElementById("lat_lng_rs").value = hospitalData.data.lat_lng_rs;
+                        document.getElementById("nama_rs").value = hospitalData.data.nama_rs;
+                        document.getElementById("alamat_rs").value = hospitalData.data.alamat_rs;
+                        document.getElementById("id_type_rs").value = hospitalData.data.id_type_rs;
+                        document.getElementById("image_url").value = hospitalData.data.image_url; // Set the image URL value
+                    } else {
+                        // Menangani kasus jika data rumah sakit tidak ditemukan
+                        console.error('Hospital data not found.');
+                        alert('Hospital data not found. Please try again later.');
+                    }
+                } catch (error) {
+                    // Menangani kesalahan saat mengambil data rumah sakit
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching hospital details. Please try again later.');
+                }
+            }
+    
             // Panggil fungsi populateForm untuk mengisi form saat halaman dimuat
             window.onload = populateForm;
         </script>
     </main>
-    
+        
 </body>
 </html>

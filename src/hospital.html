@@ -143,7 +143,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-left: 80px;  /* */
+            margin-left: 10px;  /* */
         }
 
         #hospitalTable {
@@ -155,7 +155,7 @@
             border: 1px solid #ddd;
             padding: 20px;
             text-align: left;
-            width: 80px;  /* left right */
+            width: 85px;  /* left right */
         }
         
         #hospitalTable th {
@@ -223,6 +223,7 @@
                     <th>Hospital Name</th>
                     <th>Address</th>
                     <th>Id Type RS</th>
+                    <th>Url Photo</th>
                     <th>Action</th> <!-- Tambah kolom Action -->
                     <!-- Tambahkan kolom tambahan sesuai kebutuhan -->
                 </tr>
@@ -253,6 +254,7 @@
                     <td>${hospital.nama_rs}</td>
                     <td>${hospital.alamat_rs}</td>
                     <td>${hospital.id_type_rs}</td>
+                    <td>${hospital.image_url}</td>
                     <td>
                         <button onclick="window.location.href = 'updatehospital.html?id=${hospital.id_rs}'">Edit</button>
                         <button onclick="deleteHospital(${hospital.id_rs})">Delete</button> <!-- Tombol Delete -->

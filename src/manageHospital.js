@@ -3,6 +3,7 @@ async function addHospital() {
     const nama_rs = document.getElementById('nama_rs').value;
     const alamat_rs = document.getElementById('alamat_rs').value;
     const id_type_rs = document.getElementById('id_type_rs').value;
+    const image_url = document.getElementById('image_url').value;
 
     const apiUrl = 'http://api_2105551075.local.net/api/hospitals';
     const token = localStorage.getItem("token");
@@ -24,6 +25,7 @@ async function addHospital() {
                 nama_rs: nama_rs,
                 alamat_rs: alamat_rs,
                 id_type_rs: id_type_rs,
+                image_url: image_url,
             }),
         });
 
@@ -127,6 +129,7 @@ async function editHospital() {
         nama_rs: document.getElementById("nama_rs").value,
         alamat_rs: document.getElementById("alamat_rs").value,
         id_type_rs: document.getElementById("id_type_rs").value,
+        image_url: document.getElementById("image_url").value,
     };
 
     try {

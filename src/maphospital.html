@@ -270,12 +270,12 @@
             iconAnchor: [20, 40],
         });
 
-        formatContent = function(lat, lng, nama_rs, alamat_rs, id_type_rs, index) {
+        formatContent = function(lat, lng, nama_rs, alamat_rs, id_type_rs, index, image_url) {
     const content = `
         <div>
             <div class="cell merged" style="text-align:center">${nama_rs}</div>
             <div class="cell merged" style="text-align:center">Marker [${index + 1}]</div>
-
+            <img src="${image_url}" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
             <p><strong>Latitude:</strong> ${lat}</p>
             <p><strong>Longitude:</strong> ${lng}</p>
             <p><strong>Alamat:</strong> ${alamat_rs}</p>
@@ -285,9 +285,7 @@
     return content;
 }
 
-
-
-addMarker = function(latlng, index, nama_rs, alamat_rs, id_type_rs) {
+addMarker = function(latlng, index, nama_rs, alamat_rs, id_type_rs, image_url) {
     // Menambahkan marker
     var marker = L.marker(latlng, {
         icon: myIcon,
@@ -303,7 +301,7 @@ addMarker = function(latlng, index, nama_rs, alamat_rs, id_type_rs) {
     // Menambahkan event listener pada marker
     marker.on('click', function() {
         popup.setLatLng(marker.getLatLng());
-        popup.setContent(formatContent(marker.getLatLng().lat, marker.getLatLng().lng, nama_rs, alamat_rs, id_type_rs, index));
+        popup.setContent(formatContent(marker.getLatLng().lat, marker.getLatLng().lng, nama_rs, alamat_rs, id_type_rs, index, image_url));
     });
 
     marker.on('dragstart', function(event) {
@@ -332,6 +330,7 @@ async function populateMapWithMarkers(hospitals) {
         const nama_rs = hospital.nama_rs;
         const alamat_rs = hospital.alamat_rs;
         const id_type_rs = hospital.id_type_rs;
+        const image_url = hospital.image_url; // Assuming imageUrl is a property in the hospital object
 
         // Pisahkan latitude dan longitude
         const latLngArray = latLngString.split(',');
@@ -343,7 +342,7 @@ async function populateMapWithMarkers(hospitals) {
         // Pastikan lat dan lng adalah angka yang valid
         if (!isNaN(lat) && !isNaN(lng)) {
             // Membuat marker untuk setiap rumah sakit
-            var marker = addMarker(L.latLng(lat, lng), index, nama_rs, alamat_rs, id_type_rs);
+            var marker = addMarker(L.latLng(lat, lng), index, nama_rs, alamat_rs, id_type_rs, image_url);
 
             // Tambahkan marker ke markerCluster
             markerClusters.addLayer(marker);
